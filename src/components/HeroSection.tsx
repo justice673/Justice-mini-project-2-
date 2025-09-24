@@ -22,7 +22,7 @@ export default function HeroSection() {
             <span className="drop-shadow-2xl" style={{ fontFamily: 'Outfit, sans-serif' }}>Welcome to</span>
             <br />
             <span className="bg-gradient-to-r from-green-300 via-green-400 to-green-500 bg-clip-text text-transparent drop-shadow-none" style={{ fontFamily: 'Caveat, cursive' }}>
-              J's Recipe Box
+              J&apos;s Recipe Box
             </span>
           </h1>
           
@@ -33,7 +33,7 @@ export default function HeroSection() {
           <p className="text-lg md:text-xl mb-12 text-white/85 leading-relaxed max-w-xl" style={{ fontFamily: 'Outfit, sans-serif' }}>
             <span className="drop-shadow-md">
               Discover incredible recipes, share your culinary creations, and connect with food lovers from around the world. 
-              From grandmother's secret recipes to modern culinary innovations.
+              From grandmother&apos;s secret recipes to modern culinary innovations.
             </span>
           </p>
 

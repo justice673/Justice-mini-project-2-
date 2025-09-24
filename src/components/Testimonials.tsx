@@ -23,7 +23,7 @@ export default function Testimonials() {
               ))}
             </div>
             <p className="text-gray-700 mb-4" style={{ fontFamily: 'Outfit, sans-serif' }}>
-              "J's Recipe Box has transformed my cooking! The recipes are easy to follow and always turn out amazing."
+              &quot;J&apos;s Recipe Box has transformed my cooking! The recipes are easy to follow and always turn out amazing.&quot;
             </p>
             <div className="flex items-center">
               <div className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center">
@@ -44,7 +44,7 @@ export default function Testimonials() {
               ))}
             </div>
             <p className="text-gray-700 mb-4" style={{ fontFamily: 'Outfit, sans-serif' }}>
-              "The community here is incredible. I've learned so many new techniques and made great friends!"
+              &quot;The community here is incredible. I&apos;ve learned so many new techniques and made great friends!&quot;
             </p>
             <div className="flex items-center">
               <div className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center">
@@ -65,7 +65,7 @@ export default function Testimonials() {
               ))}
             </div>
             <p className="text-gray-700 mb-4" style={{ fontFamily: 'Outfit, sans-serif' }}>
-              "As a professional chef, I love sharing my recipes here. The platform is beautifully designed!"
+              &quot;As a professional chef, I love sharing my recipes here. The platform is beautifully designed!&quot;
             </p>
             <div className="flex items-center">
               <div className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center">

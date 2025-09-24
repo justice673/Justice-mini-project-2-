@@ -47,7 +47,7 @@ export default function Header() {
         {/* Left: Site Name */}
         <Link href="/" className="flex-shrink-0">
           <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-green-300 via-green-400 to-green-500 bg-clip-text text-transparent cursor-pointer" style={{ fontFamily: 'Caveat, cursive' }}>
-            J's Recipe Box
+            J&apos;s Recipe Box
           </h2>
         </Link>
         

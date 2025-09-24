@@ -9,7 +9,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <h3 className="text-3xl font-bold mb-4 text-green-400" style={{ fontFamily: 'Caveat, cursive' }}>
-              J's Recipe Box
+              J&apos;s Recipe Box
             </h3>
             <p className="text-gray-300 mb-6 max-w-md" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Where every recipe tells a story. Join our community of food lovers and discover incredible recipes from around the world.
@@ -72,7 +72,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
           <p className="text-gray-400" style={{ fontFamily: 'Outfit, sans-serif' }}>
-            © 2025 J's Recipe Box. All rights reserved. Made with <Heart className="w-4 h-4 text-red-500 inline fill-current" /> for food lovers everywhere.
+            © 2025 J&apos;s Recipe Box. All rights reserved. Made with <Heart className="w-4 h-4 text-red-500 inline fill-current" /> for food lovers everywhere.
           </p>
         </div>
       </div>
