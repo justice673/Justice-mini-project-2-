@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Search, Clock, Users, ChefHat, Heart, ArrowLeft, Star, ArrowRight, Filter, X } from 'lucide-react';
+import { Search, Clock, Users, ChefHat, Heart, ArrowLeft, Star, ArrowRight, Filter } from 'lucide-react';
 import Pagination from '@/components/Pagination';
 
 export default function SearchPage() {

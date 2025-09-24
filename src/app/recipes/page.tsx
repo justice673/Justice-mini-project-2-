@@ -171,7 +171,7 @@ export default function RecipesPage() {
     const likes: { [key: string]: boolean } = {};
     recipes.forEach(r => { likes[r.id] = r.liked; });
     setUserLikes(likes);
-  }, []);
+  }, [recipes]);
 
   const clearFilters = () => {
     setSelectedCategory('all');
@@ -198,8 +198,12 @@ export default function RecipesPage() {
         throw new Error(errData.message || 'Failed to like recipe');
       }
       setUserLikes(prev => ({ ...prev, [recipeId]: !prev[recipeId] }));
-    } catch (err: any) {
-      alert(err.message || 'Failed to like recipe');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(err.message || 'Failed to like recipe');
+      } else {
+        alert('Failed to like recipe');
+      }
     }
   };
 

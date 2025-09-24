@@ -7,7 +7,7 @@ export default function Features() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold mb-4 text-gray-800" style={{ fontFamily: 'Caveat, cursive' }}>
-            Why Choose J's Recipe Box?
+            Why Choose J&apos;s Recipe Box?
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Everything you need to discover, share, and create amazing recipes

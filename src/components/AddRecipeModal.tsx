@@ -6,8 +6,8 @@ import { X, Upload, Plus, Minus } from 'lucide-react';
 interface AddRecipeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (recipeData: any) => void;
-  initialData?: any;
+  onSubmit: (recipeData: Record<string, unknown>) => void;
+  initialData?: Record<string, unknown>;
 }
 
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset'; // Replace with your Cloudinary upload preset
@@ -30,22 +30,24 @@ export default function AddRecipeModal({ isOpen, onClose, onSubmit, initialData 
   });
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState<string>('');
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [error, setError] = React.useState('');
 
   React.useEffect(() => {
     if (initialData) {
       setFormData({
         ...formData,
         ...initialData,
-        prepTime: initialData.prepTime?.toString() || '',
-        serves: initialData.serves?.toString() || '',
-        calories: initialData.calories?.toString() || '',
-        ingredients: initialData.ingredients?.length ? initialData.ingredients : [''],
-        instructions: initialData.instructions?.length ? initialData.instructions : [''],
-        image: initialData.image || '',
+        prepTime: typeof initialData.prepTime === 'number' || typeof initialData.prepTime === 'string' ? initialData.prepTime.toString() : '',
+        serves: typeof initialData.serves === 'number' || typeof initialData.serves === 'string' ? initialData.serves.toString() : '',
+        calories: typeof initialData.calories === 'number' || typeof initialData.calories === 'string' ? initialData.calories.toString() : '',
+        ingredients: Array.isArray(initialData.ingredients) ? initialData.ingredients as string[] : [''],
+        instructions: Array.isArray(initialData.instructions) ? initialData.instructions as string[] : [''],
+        image: typeof initialData.image === 'string' ? initialData.image : '',
       });
-      setImagePreview(initialData.image || '');
+      setImagePreview(typeof initialData.image === 'string' ? initialData.image : '');
     }
-  }, [initialData]);
+  }, [initialData, formData]);
 
   const categories = [
     { value: 'breakfast', label: 'Breakfast' },
@@ -135,46 +137,16 @@ export default function AddRecipeModal({ isOpen, onClose, onSubmit, initialData 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    let imageUrl = formData.image;
-    if (imageFile) {
-      try {
-        imageUrl = await handleImageUpload(imageFile);
-      } catch (err) {
-        alert('Image upload failed. Please try again.');
-        return;
-      }
+    setIsSubmitting(true);
+    setError('');
+    try {
+      await onSubmit(formData);
+      onClose();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to submit recipe');
+    } finally {
+      setIsSubmitting(false);
     }
-    const cleanedData = {
-      ...formData,
-      image: imageUrl,
-      ingredients: formData.ingredients.filter(item => item.trim() !== ''),
-      instructions: formData.instructions.filter(item => item.trim() !== ''),
-      prepTime: parseInt(formData.prepTime),
-      serves: parseInt(formData.serves),
-      calories: parseInt(formData.calories)
-    };
-
-    onSubmit(cleanedData);
-    
-    // Reset form
-    setFormData({
-      title: '',
-      description: '',
-      image: '',
-      prepTime: '',
-      difficulty: 'easy',
-      category: 'breakfast',
-      cuisine: 'american',
-      diet: 'none',
-      serves: '',
-      calories: '',
-      ingredients: [''],
-      instructions: ['']
-    });
-    setImageFile(null);
-    setImagePreview('');
-    onClose();
   };
 
   if (!isOpen) return null;
@@ -247,7 +219,12 @@ export default function AddRecipeModal({ isOpen, onClose, onSubmit, initialData 
                   required={!imageFile}
                 />
                 {imagePreview && (
-                  <img src={imagePreview} alt="Preview" className="w-20 h-20 object-cover rounded-lg border" />
+                  // <img src={imagePreview} alt="Preview" className="w-20 h-20 object-cover rounded-lg border" />
+                  <img
+                    src={imagePreview}
+                    alt="Recipe Preview"
+                    className="w-full h-48 object-cover rounded-lg mb-4"
+                  />
                 )}
               </div>
             </div>
