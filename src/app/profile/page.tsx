@@ -7,17 +7,50 @@ import { Clock, Users, ChefHat, Heart, ArrowLeft, Star, ArrowRight, Plus, Settin
 import Pagination from '@/components/Pagination';
 import AddRecipeModal from '@/components/AddRecipeModal';
 
+interface Recipe {
+  _id?: string;
+  id?: string | number;
+  title: string;
+  description: string;
+  image: string;
+  prepTime: number;
+  difficulty: string;
+  category: string;
+  cuisine: string;
+  diet: string;
+  serves: number;
+  calories?: number;
+  ingredients: string[];
+  instructions: string[];
+  rating?: number;
+  liked?: boolean;
+  publishedDate?: string;
+  [key: string]: unknown;
+}
+
+interface User {
+  _id: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  email: string;
+  joinedDate?: string;
+  totalRecipes?: number;
+  totalFavorites?: number;
+  [key: string]: unknown;
+}
+
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = React.useState('favorites');
   const [currentPage, setCurrentPage] = React.useState(0);
   const [showAddModal, setShowAddModal] = React.useState(false);
-  const [publishedRecipes, setPublishedRecipes] = React.useState<any[]>([]);
-  const [user, setUser] = React.useState<any>(null);
+  const [publishedRecipes, setPublishedRecipes] = React.useState<Recipe[]>([]);
+  const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
-  const [editRecipe, setEditRecipe] = React.useState<any | null>(null);
+  const [editRecipe, setEditRecipe] = React.useState<Recipe | null>(null);
   const [showEditModal, setShowEditModal] = React.useState(false);
-  const [favoriteRecipes, setFavoriteRecipes] = React.useState<any[]>([]);
+  const [favoriteRecipes, setFavoriteRecipes] = React.useState<Recipe[]>([]);
   const recipesPerPage = 6;
 
   React.useEffect(() => {
@@ -39,8 +72,10 @@ export default function ProfilePage() {
         if (!recipesRes.ok) throw new Error('Failed to fetch recipes');
         const recipesData = await recipesRes.json();
         setPublishedRecipes(recipesData);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        let errorMsg = 'Failed to fetch profile or recipes';
+        if (err instanceof Error) errorMsg = err.message;
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
@@ -61,7 +96,7 @@ export default function ProfilePage() {
         // If backend supports a /api/recipes/favorites or similar, use that instead.
         // For now, filter recipes where user has liked them (assuming backend returns this info)
         const userId = user?._id;
-        const liked = allPopular.filter((r: any) => r.likedBy?.includes(userId));
+        const liked = allPopular.filter((r: Record<string, unknown>) => Array.isArray(r.likedBy) && userId && r.likedBy.includes(userId));
         setFavoriteRecipes(liked);
       } catch {}
     };
@@ -86,7 +121,7 @@ export default function ProfilePage() {
     setCurrentPage(0);
   };
 
-  const handleAddRecipe = async (recipeData: any) => {
+  const handleAddRecipe = async (recipeData: Recipe) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('Not authenticated.');
@@ -112,17 +147,19 @@ export default function ProfilePage() {
       setPublishedRecipes(recipesData);
       setActiveTab('published');
       setCurrentPage(0);
-    } catch (err: any) {
-      alert(err.message || 'Failed to add recipe');
+    } catch (err: unknown) {
+      let errorMsg = 'Failed to add recipe';
+      if (err instanceof Error) errorMsg = err.message;
+      alert(errorMsg);
     }
   };
 
-  const handleEditClick = (recipe: any) => {
+  const handleEditClick = (recipe: Recipe) => {
     setEditRecipe(recipe);
     setShowEditModal(true);
   };
 
-  const handleEditRecipe = async (updatedData: any) => {
+  const handleEditRecipe = async (updatedData: Recipe) => {
     try {
       const token = localStorage.getItem('token');
       if (!token || !editRecipe) throw new Error('Not authenticated.');
@@ -148,8 +185,10 @@ export default function ProfilePage() {
       setPublishedRecipes(recipesData);
       setShowEditModal(false);
       setEditRecipe(null);
-    } catch (err: any) {
-      alert(err.message || 'Failed to update recipe');
+    } catch (err: unknown) {
+      let errorMsg = 'Failed to update recipe';
+      if (err instanceof Error) errorMsg = err.message;
+      alert(errorMsg);
     }
   };
 
@@ -174,8 +213,10 @@ export default function ProfilePage() {
       const recipesRes = await fetch(`http://localhost:5000/api/recipes/user/${userData._id}`);
       const recipesData = await recipesRes.json();
       setPublishedRecipes(recipesData);
-    } catch (err: any) {
-      alert(err.message || 'Failed to delete recipe');
+    } catch (err: unknown) {
+      let errorMsg = 'Failed to delete recipe';
+      if (err instanceof Error) errorMsg = err.message;
+      alert(errorMsg);
     }
   };
 
@@ -365,14 +406,14 @@ export default function ProfilePage() {
                         <div className="absolute top-3 right-3 flex gap-2">
                           <button
                             className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
-                            onClick={() => handleEditClick(recipe)}
+                            onClick={() => handleEditClick(recipe as Recipe)}
                             title="Edit Recipe"
                           >
                             <Edit className="w-4 h-4 text-gray-600" />
                           </button>
                           <button
                             className="p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
-                            onClick={() => handleDeleteRecipe(recipe._id || recipe.id)}
+                            onClick={() => handleDeleteRecipe((recipe._id || recipe.id)?.toString() || '')}
                             title="Delete Recipe"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-red-600">
@@ -406,7 +447,7 @@ export default function ProfilePage() {
                           <div className="flex items-center">
                             <Clock className="w-4 h-4 text-green-600 mr-1" />
                             <span className="text-green-600 font-semibold text-sm" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                              {recipe.time}
+                              {typeof recipe.time === 'string' || typeof recipe.time === 'number' ? recipe.time : ''}
                             </span>
                           </div>
                           <div className="flex items-center">
@@ -432,17 +473,17 @@ export default function ProfilePage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           {[1, 2, 3, 4, 5].map((star) => (
-                            <Star 
-                              key={star} 
-                              className={`w-4 h-4 ${star <= Math.floor(recipe.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                            <Star
+                              key={star}
+                              className={`w-4 h-4 ${star <= Math.floor(Number(recipe.rating ?? 0)) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
                             />
                           ))}
                           <span className="ml-1 text-sm text-gray-600" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                            ({recipe.rating})
+                            ({recipe.rating ?? 0})
                           </span>
                         </div>
                         <Link
-                          href={`/recipes/${recipe.id}`}
+                          href={`/recipes/${String(recipe.id ?? recipe._id ?? '')}`}
                           className="text-green-600 hover:text-green-700 font-semibold text-sm flex items-center gap-1"
                           style={{ fontFamily: 'Caveat, cursive' }}
                         >

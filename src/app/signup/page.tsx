@@ -58,8 +58,10 @@ export default function SignupPage() {
       if (!res.ok) throw new Error(data.message || 'Signup failed');
       setSuccess('Account created! You can now log in.');
       setForm({ fullName: '', email: '', password: '', confirmPassword: '', terms: false });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      let errorMsg = 'Signup failed';
+      if (err instanceof Error) errorMsg = err.message;
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -97,7 +99,7 @@ export default function SignupPage() {
                   Join Our Community
                 </h2>
                 <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-300 via-green-400 to-green-500 bg-clip-text text-transparent" style={{ fontFamily: 'Caveat, cursive' }}>
-                  J's Recipe Box
+                  J&apos;s Recipe Box
                 </h3>
               </div>
             </div>

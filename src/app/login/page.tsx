@@ -48,8 +48,10 @@ export default function LoginPage() {
       // Store token (localStorage or cookie)
       localStorage.setItem('token', data.token);
       // Optionally redirect or update app state here
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      let errorMsg = 'Login failed';
+      if (err instanceof Error) errorMsg = err.message;
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -87,7 +89,7 @@ export default function LoginPage() {
                   Welcome Back to
                 </h2>
                 <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-300 via-green-400 to-green-500 bg-clip-text text-transparent" style={{ fontFamily: 'Caveat, cursive' }}>
-                  J's Recipe Box
+                  J&apos;s Recipe Box
                 </h3>
               </div>
             </div>
@@ -199,7 +201,7 @@ export default function LoginPage() {
                 {/* Sign Up Link */}
                 <div className="text-center">
                   <p className="text-gray-600" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                    Don't have an account?{' '}
+                    Don&apos;t have an account?{' '}
                     <Link href="/signup" className="text-green-600 hover:text-green-700 font-semibold">
                       Sign up here
                     </Link>

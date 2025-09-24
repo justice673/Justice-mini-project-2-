@@ -24,9 +24,11 @@ export default function ForgotPasswordPage() {
       if (!res.ok) throw new Error(data.message || 'Failed to send reset link');
       setStatus('success');
       setMessage('A password reset link has been sent to your email if it exists in our system.');
-    } catch (err: any) {
+    } catch (err: unknown) {
+      let errorMsg = 'Failed to send reset link';
+      if (err instanceof Error) errorMsg = err.message;
       setStatus('error');
-      setMessage(err.message || 'Failed to send reset link');
+      setMessage(errorMsg);
     }
   };
 
@@ -62,7 +64,7 @@ export default function ForgotPasswordPage() {
                   Reset Your Password
                 </h2>
                 <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-300 via-green-400 to-green-500 bg-clip-text text-transparent" style={{ fontFamily: 'Caveat, cursive' }}>
-                  J's Recipe Box
+                  J&apos;s Recipe Box
                 </h3>
               </div>
             </div>
@@ -78,7 +80,7 @@ export default function ForgotPasswordPage() {
                   Forgot Password?
                 </h1>
                 <p className="text-gray-600" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                  No worries! Enter your email and we'll send you a reset link
+                  No worries! Enter your email and we&apos;ll send you a reset link
                 </p>
               </div>
 
